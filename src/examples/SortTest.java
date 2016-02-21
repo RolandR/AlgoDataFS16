@@ -93,6 +93,8 @@ public class SortTest {
 		System.out.println("elapsed time: "+eTime/1e6+" ms");
 		System.out.println("sorted? "+sortCheck(a));
 		System.out.println("swap operation needed: "+cnt);
+		
+		// ok
 	}
 
 
