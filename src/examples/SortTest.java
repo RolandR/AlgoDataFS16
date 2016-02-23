@@ -58,11 +58,30 @@ public class SortTest {
 		a[k]=tmp;
 		cnt++;
 	}
+
+	public static void mergeSort(int[]a){
+		b = new int[a.length];
+		mSort(a,0,a.length-1);
+	}
 	
+	private static void mSort(int[] a, int from, int to) {
+		if (from == to) return; // nothing to do
+		int mid = (from+to)/2;
+		mSort(a,from,mid);
+		mSort(a,mid+1,to);
+		merge(a,from,mid,to);
+	}
+	
+	private static void merge(int[] a, int from, int mid, int to) {
+		// merge the sections a[from..mid] and a[mid+1..to] into
+		// b[from..to] and copy back
+		//....
+	}
+
 
 	public static void main(String[] args) {
 		long t1=0,t2=0,te1=0,te2=0,eTime=0,time=0;
-		int n = 50000;
+		int n = 200000;
 		// we need a random generator
 		Random rand=new Random(Integer.MAX_VALUE);
 		//rand.setSeed(54326346); // initialize always in the same state
