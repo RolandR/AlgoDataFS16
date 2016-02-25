@@ -75,7 +75,43 @@ public class SortTest {
 	private static void merge(int[] a, int from, int mid, int to) {
 		// merge the sections a[from..mid] and a[mid+1..to] into
 		// b[from..to] and copy back
-		// to do....
+
+		int i = 0;
+		int point0 = from;
+		int point1 = mid+1;
+		
+		while(true){
+
+			if(point0 > mid && point1 > to){
+				break;
+			} else if(point0 > mid){
+				b[i] = a[point1];
+				point1++;
+			} else if(point1 > to){
+				b[i] = a[point0];
+				point0++;
+			} else {
+				if(a[point0] <= a[point1]){
+					b[i] = a[point0];
+					point0++;
+				} else {
+					b[i] = a[point1];
+					point1++;
+				}
+			}
+
+			i++;
+		}
+
+		//String debug = i + "; " + from + ", " + mid + ", " + to + " ->";
+		
+		for(int p = 0; p < i; p++){
+			a[from+p] = b[p];
+			//debug += " "+b[p];
+		}
+
+		//System.out.println(debug);
+		
 	}
 
 	public static void main(String[] args) {
@@ -99,7 +135,8 @@ public class SortTest {
 		// get Time
 		te1=System.nanoTime();
 		t1 = threadBean.getCurrentThreadCpuTime();
-		bubbleSort(a);
+		//bubbleSort(a);
+		mergeSort(a);
 		
 		// System.out.println("heap? "+heapCheck(a));
 		te2 = System.nanoTime();
