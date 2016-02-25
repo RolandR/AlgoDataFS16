@@ -75,12 +75,33 @@ public class SortTest {
 	private static void merge(int[] a, int from, int mid, int to) {
 		// merge the sections a[from..mid] and a[mid+1..to] into
 		// b[from..to] and copy back
-		// to do....
+		// to do...
+		// we need 3 index pointers
+		int p1=from,p2=mid+1,p3=from;
+		while(true){
+			// first part allready copied?
+			if (p1>mid) 
+				// yes (we are finished) break
+				break;
+			// second part allready finished
+			else if(p2>to){
+				// yes. copy reminder of part1 and the break
+				while(p1<=mid) b[p3++]=a[p1++];
+				break;
+			}
+			else { 
+				// copy the smaller of the two candidates
+				if (a[p1]<=a[p2]) b[p3++]=a[p1++];
+				else b[p3++] = a[p2++];		 
+			}
+		}
+		// copy back
+		while (--p3>=from) a[p3]=b[p3];
 	}
 
 	public static void main(String[] args) {
 		long t1=0,t2=0,te1=0,te2=0,eTime=0,time=0;
-		int n = 10000;
+		int n = 100000000;
 		// we need a random generator
 		Random rand=new Random(Integer.MAX_VALUE);
 		//rand.setSeed(54326346); // initialize always in the same state
@@ -99,7 +120,7 @@ public class SortTest {
 		// get Time
 		te1=System.nanoTime();
 		t1 = threadBean.getCurrentThreadCpuTime();
-		bubbleSort(a);
+		mergeSort(a);
 		
 		// System.out.println("heap? "+heapCheck(a));
 		te2 = System.nanoTime();
