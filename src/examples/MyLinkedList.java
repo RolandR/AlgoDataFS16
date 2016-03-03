@@ -16,7 +16,10 @@ public class MyLinkedList<E> implements List<E> {
 		}
 		
 	}
-	 
+
+	
+	
+	
 	private LNode first,last;
 	private int size; 
 	
@@ -58,8 +61,7 @@ public class MyLinkedList<E> implements List<E> {
 
 	@Override
 	public Position<E> next(Position<E> p) {
-		LNode n = checkAndCast(p);
-		return n.next;
+		return checkAndCast(p).next;
 	}
 
 
@@ -79,13 +81,11 @@ public class MyLinkedList<E> implements List<E> {
 	public Position<E> insertFirst(E o) {
 		LNode n = new LNode();
 		n.elem = o;
+		n.next = first;
 		if (first == null){
 			last = n;
 		}
-		else {
-			first.prev = n;
-			n.next = first;
-		}
+		else first.prev = n;
 		first = n;
 		size++;
 		return n;
@@ -105,25 +105,7 @@ public class MyLinkedList<E> implements List<E> {
 
 	@Override
 	public Position<E> insertAfter(Position<E> p, E o) {
-		LNode n = checkAndCast(p);
-		// make the new node:
-		LNode newN = new LNode();
-		
-		// forwards: 
-		newN.elem = o;
-		newN.next = n.next;
-		newN.prev = n;
-		
-		// backwards:		
-		n.next = newN;
-		if (n==last){
-			last = newN;
-		}
-		else {
-			newN.next.prev = newN;
-		}
-		size++;
-		return newN;
+		return null;
 	}
 
 	@Override
@@ -141,7 +123,9 @@ public class MyLinkedList<E> implements List<E> {
 	@Override
 	public Iterator<E> elements() {
 		return new Iterator<E>() {
-			LNode curentNode = first; // points always to the next node
+			// curent position:
+			LNode curentNode = first;
+			
 			@Override
 			public boolean hasNext() {
 				return curentNode!=null;
@@ -150,13 +134,14 @@ public class MyLinkedList<E> implements List<E> {
 			@Override
 			public E next() {
 				LNode ret = curentNode;
-				if (ret==null) throw new NoSuchElementException();
+				if (ret == null) throw new NoSuchElementException();
 				curentNode = curentNode.next;
 				return ret.elem;
 			}
 		};
 	}
 
+	
 	@Override
 	public int size() {
 		// TODO Auto-generated method stub
@@ -170,21 +155,14 @@ public class MyLinkedList<E> implements List<E> {
 	}
 
 	public static void main(String[] args) {
-		List<String> li = new MyLinkedList<>(); 
-		Position<String> p1 = li.insertFirst("hans");
+		MyLinkedList<String> li2,li = new MyLinkedList<>(); 
+		li2 = new MyLinkedList();
 		li.insertFirst("susi");
 		li.insertFirst("beat");
-		li.insertAfter(p1, "hans2");
-		p1 = li.insertFirst("urs");		
-		li.insertAfter(p1, "urs2");
+		Position<String> p1 = li.insertFirst("urs");
 		while (p1 != null) {
 			System.out.println(p1.element());
 			p1 = li.next(p1);
 		}
-//		System.out.println(p1.element());
-//		System.out.println(p2.element());
-		Iterator<String> it = li.elements();
-		while (it.hasNext()) System.out.println(it.next());
 	}
-
 }
