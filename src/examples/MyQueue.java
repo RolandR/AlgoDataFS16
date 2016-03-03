@@ -7,42 +7,59 @@ package examples;
  */
 public class MyQueue<E> implements Queue<E> { 
 	
-	private E[] stor = (E[]) new Object[256]; 
+	private E[] stor = (E[]) new Object[100]; 
 	private int inPtr, outPtr, size; 
 	
 	@Override
 	public void enqueue(E o) {
-		// TODO Auto-generated method stub
+		if (size==stor.length) expand();
+		if (inPtr==stor.length) inPtr=0;
+		stor[inPtr++]=o;
+		size++;
+	}
 
+	private void expand() {
+		E[] tmp = (E[]) new Object[stor.length*2];
+		for (int i=0;i<size;i++){
+			if (outPtr==stor.length) outPtr=0;
+			tmp[i]=stor[outPtr++];
+		}
+		inPtr = size;
+		outPtr= 0;
+		stor = tmp;
 	}
 
 	@Override
 	public E dequeue() {
-		// TODO Auto-generated method stub
-		return null;
+		if (size==0) throw new RuntimeException("Empty queue!");
+		if (outPtr==stor.length) outPtr=0;
+		size--;
+		return stor[outPtr++];
 	}
 
 	@Override
 	public E head() {
-		// TODO Auto-generated method stub
-		return null;
+		return stor[outPtr];
 	}
 
 	@Override
 	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
+		return size;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
+		return size==0;
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		Queue<String> q = new MyQueue<>();
+		q.enqueue("hans");
+		q.enqueue("susi");
+		q.enqueue("urs");
+		System.out.println(q.dequeue());
+		System.out.println(q.dequeue());
+		System.out.println(q.dequeue());
 	}
 
 }
