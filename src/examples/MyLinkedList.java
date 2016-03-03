@@ -1,6 +1,7 @@
 package examples;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
 public class MyLinkedList<E> implements List<E> {
@@ -105,7 +106,24 @@ public class MyLinkedList<E> implements List<E> {
 
 	@Override
 	public Position<E> insertAfter(Position<E> p, E o) {
-		return null;
+		LNode n = checkAndCast(p);
+
+		//make new Node
+		LNode newN = new LNode();
+		newN.elem = o;
+		
+		// forward...
+		newN.prev = n;
+		newN.next = n.next;
+		// bachward...
+		
+		n.next = newN;
+		if (n==last){
+			last = newN;
+		}
+		else newN.next.prev = newN;
+		size++;
+		return newN;
 	}
 
 	@Override
