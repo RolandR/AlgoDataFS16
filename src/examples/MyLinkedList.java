@@ -1,6 +1,7 @@
 package examples;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class MyLinkedList<E> implements List<E> {
 	// auxiliary class for our positions
@@ -104,8 +105,25 @@ public class MyLinkedList<E> implements List<E> {
 
 	@Override
 	public Position<E> insertAfter(Position<E> p, E o) {
-		// TODO Auto-generated method stub
-		return null;
+		LNode n = checkAndCast(p);
+		// make the new node:
+		LNode newN = new LNode();
+		
+		// forwards: 
+		newN.elem = o;
+		newN.next = n.next;
+		newN.prev = n;
+		
+		// backwards:		
+		n.next = newN;
+		if (n==last){
+			last = newN;
+		}
+		else {
+			newN.next.prev = newN;
+		}
+		size++;
+		return newN;
 	}
 
 	@Override
@@ -122,8 +140,21 @@ public class MyLinkedList<E> implements List<E> {
 
 	@Override
 	public Iterator<E> elements() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Iterator<E>() {
+			LNode curentNode = first; // points always to the next node
+			@Override
+			public boolean hasNext() {
+				return curentNode!=null;
+			}
+
+			@Override
+			public E next() {
+				LNode ret = curentNode;
+				if (ret==null) throw new NoSuchElementException();
+				curentNode = curentNode.next;
+				return ret.elem;
+			}
+		};
 	}
 
 	@Override
@@ -143,15 +174,17 @@ public class MyLinkedList<E> implements List<E> {
 		Position<String> p1 = li.insertFirst("hans");
 		li.insertFirst("susi");
 		li.insertFirst("beat");
-		p1 = li.insertFirst("urs");
+		li.insertAfter(p1, "hans2");
+		p1 = li.insertFirst("urs");		
+		li.insertAfter(p1, "urs2");
 		while (p1 != null) {
 			System.out.println(p1.element());
 			p1 = li.next(p1);
 		}
 //		System.out.println(p1.element());
 //		System.out.println(p2.element());
-//		Iterator<String> it = li.elements();
-//		while (it.hasNext()) System.out.println(it.next());
+		Iterator<String> it = li.elements();
+		while (it.hasNext()) System.out.println(it.next());
 	}
 
 }
