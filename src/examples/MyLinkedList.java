@@ -128,14 +128,36 @@ public class MyLinkedList<E> implements List<E> {
 
 	@Override
 	public void remove(Position<E> p) {
-		// TODO Auto-generated method stub
-
+		// p is removed (and invalidated) from this instance
+		LNode n = checkAndCast(p);
+		if (n != first)	n.prev.next = n.next;			
+		else first = n.next;
+		if (n != last) n.next.prev = n.prev;
+		else last = n.prev;
+		n.owner = null;
+		size--;
 	}
 
 	@Override
 	public Iterator<Position<E>> positions() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Iterator<Position<E>>() {
+			// curent position:
+			LNode curentNode = first;
+			
+			@Override
+			public boolean hasNext() {
+				return curentNode!=null;
+			}
+
+			@Override
+			public Position<E> next() {
+				LNode ret = curentNode;
+				if (ret == null) throw new NoSuchElementException();
+				curentNode = curentNode.next;
+				return ret;
+			}
+		};
+
 	}
 
 	@Override
@@ -162,19 +184,16 @@ public class MyLinkedList<E> implements List<E> {
 	
 	@Override
 	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
+		return size;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
+		return size==0;
 	}
 
 	public static void main(String[] args) {
-		MyLinkedList<String> li2,li = new MyLinkedList<>(); 
-		li2 = new MyLinkedList();
+		MyLinkedList<String> li = new MyLinkedList<>(); 
 		li.insertFirst("susi");
 		li.insertFirst("beat");
 		Position<String> p1 = li.insertFirst("urs");
@@ -182,5 +201,8 @@ public class MyLinkedList<E> implements List<E> {
 			System.out.println(p1.element());
 			p1 = li.next(p1);
 		}
-	}
+		Iterator<Position<String>>  it = li.positions();
+		while (it.hasNext()) li.remove(it.next());
+		System.out.println(li.size());
+ 	}
 }
