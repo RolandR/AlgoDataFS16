@@ -19,8 +19,6 @@ public class MyLinkedList<E> implements List<E> {
 	}
 
 	
-	
-	
 	private LNode first,last;
 	private int size; 
 	

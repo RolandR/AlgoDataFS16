@@ -2,6 +2,8 @@ package examples;
 
 import java.util.Iterator;
 
+import examples.MyLinkedList.LNode;
+
 public class MyTree<E> implements Tree<E> {
 
 	class TNode implements Position<E>{
@@ -9,7 +11,7 @@ public class MyTree<E> implements Tree<E> {
 		E elem;
 		TNode parent;
 		MyLinkedList<TNode> children = new MyLinkedList<>();
-		Position<Position> myChildrenPosition; 
+		Position<TNode> myChildrenPosition; 
 		Object owner = MyTree.this;
 		
 		@Override
@@ -22,6 +24,19 @@ public class MyTree<E> implements Tree<E> {
 	private TNode root;
 	private int size;
 	
+	
+	private TNode checkAndCast(Position<E> p) {
+		TNode n;
+		try {
+			n = (TNode) p;
+		} catch (ClassCastException e) {
+			throw new RuntimeException("This is not a Position belonging to MyTree"); 
+		}
+		if (n.owner == null) throw new RuntimeException("position was allready deleted!");
+		if (n.owner != this) throw new RuntimeException("position belongs to another MyTree instance!");			
+		return n;
+	}
+
 	@Override
 	public Position<E> root() {
 		return root;
@@ -37,14 +52,25 @@ public class MyTree<E> implements Tree<E> {
 
 	@Override
 	public Position<E> parent(Position<E> child) {
-		// TODO Auto-generated method stub
-		return null;
+		return checkAndCast(child).parent;
 	}
 
 	@Override
 	public Iterator<Position<E>> childrenPositions(Position<E> parent) {
-		// TODO Auto-generated method stub
-		return null;
+		final TNode n = checkAndCast(parent);
+		return new Iterator<Position<E>>() {
+			Iterator<TNode> it = n.children.elements();
+			@Override
+			public boolean hasNext() {
+				return it.hasNext();
+			}
+
+			@Override
+			public Position<E> next() {
+				return it.next();
+			}
+			
+		};
 	}
 
 	@Override
@@ -55,8 +81,8 @@ public class MyTree<E> implements Tree<E> {
 
 	@Override
 	public int numberOfChildren(Position<E> parent) {
-		// TODO Auto-generated method stub
-		return 0;
+		TNode n = checkAndCast(parent);
+		return n.children.size();
 	}
 
 	@Override
@@ -67,8 +93,13 @@ public class MyTree<E> implements Tree<E> {
 
 	@Override
 	public Position<E> addChild(Position<E> parent, E o) {
-		// TODO Auto-generated method stub
-		return null;
+		TNode n = checkAndCast(parent);
+		TNode newN = new TNode();
+		newN.elem = o;
+		newN.parent = n;
+		newN.myChildrenPosition = n.children.insertLast(newN);
+		size++;
+		return newN;
 	}
 
 	@Override
@@ -120,8 +151,7 @@ public class MyTree<E> implements Tree<E> {
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 }
