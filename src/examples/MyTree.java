@@ -150,8 +150,14 @@ public class MyTree<E> implements Tree<E> {
 		return null;
 	}
 
+
 	public static void main(String[] args) {
-		
+		MyTree<String> t = new MyTree<>();
+		Position<String> p=t.createRoot("Doc Titel");
+		Position<String> p1 = t.addChild(p,"1. Kapitel ..");
+		t.addChild(p," 2. Kapitel");
+		t.addChild(p," 3. Kapitel");
+		t.addChild(p1,"1.1 Kapitel");
 	}
 
 }
